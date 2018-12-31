@@ -2,53 +2,82 @@ $(document).ready(function () {
 
     // firebase config
     var config = {
-        apiKey: "AIzaSyCnIQMlvdKoINPnmhqB6AtAImcqFwUnzMo",
-        authDomain: "trainschedules-1c06e.firebaseapp.com",
-        databaseURL: "https://trainschedules-1c06e.firebaseio.com",
-        projectId: "trainschedules-1c06e",
-        storageBucket: "",
-        messagingSenderId: "785465134374"
+        apiKey: "AIzaSyCufwmr74IKdNKKlUISG3yCHBaESHf6QTk",
+        authDomain: "rps-multiplayer-c8da7.firebaseapp.com",
+        databaseURL: "https://rps-multiplayer-c8da7.firebaseio.com",
+        projectId: "rps-multiplayer-c8da7",
+        storageBucket: "rps-multiplayer-c8da7.appspot.com",
+        messagingSenderId: "81500581625"
     };
     firebase.initializeApp(config);
     var database = firebase.database();
 
-    var provider = new firebase.auth.GoogleAuthProvider();
+    // declare user variables
+    var user1;
+    var user2;
+    var playingAs = "notPlaying";
 
-    var user = firebase.auth().currentUser;
-    console.log(user);
-    if (user || firebase.auth().getRedirectResult()) {
-       // User is signed in.
-       firebase.auth().getRedirectResult().then(function (result) {
-          console.log(result)
+    // get current user data from database
+    database.ref().on('value', function (snap) {
+        console.log(snap.val());
+        user1 = {
+            connected: snap.val().user1.connected,
+            name: snap.val().user1.name,
+        };
+        user2 = {
+            connected: snap.val().user2.connected,
+            name: snap.val().user2.name,
+        };
+    });
 
-          if (result.credential) {
-             // This gives you a Google Access Token. You can use it to access the Google API.
-             var token = result.credential.accessToken;
-          }
-          else {
-             var provider = new firebase.auth.GoogleAuthProvider();
-             console.log(1)
-             firebase.auth().signInWithRedirect(provider);
-          }
-          // The signed-in user info.
-          var user = result.user;
-       }).catch(function (error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-       });
+    // player joins game
+    $(document).on('click', '#btn-enter-name', function (e) {
+        e.preventDefault();
+        // join the first available seat
+        if (user1.connected === false && playingAs === 'notPlaying') {
+            joinGame(user1.connected, user1.name, 'user1');
+        } else if (user2.connected === false && playingAs === 'notPlaying') {
+            joinGame(user2.connected, user2.name, 'user2');
+        } else {
+            alert('Game is full.');
+        }
 
-    } else {
-       // No user is signed in.
-       console.log("No user signed in.")
-    }
+        function joinGame(userConnected, userName, userSlot) {
+            // update local variables
+            userConnected = true;
+            userName = $('#form-enter-name').val().trim();
+            playingAs = userSlot;
+            // update database
+            database.ref(userSlot).set({
+                connected: true,
+                name: userName,
+            });
+            // clear form
+            $('#form-enter-name').val('');
+        }
+    });
 
-
-    
+    // player leaves game
+    database.ref(playingAs).onDisconnect().update({
+        connected: false,
+        name: null,
+    });
 
 });
+
+/*
+var adaNameRef = firebase.database().ref('users/ada/name');
+adaNameRef.child('first').set('Ada');
+adaNameRef.child('last').set('Lovelace');
+
+var ref = firebase.database().ref("users/ada");
+ref.update({
+   onlineState: true,
+   status: "I'm online."
+});
+ref.onDisconnect().update({
+  onlineState: false,
+  status: "I'm offline."
+});
+
+*/
