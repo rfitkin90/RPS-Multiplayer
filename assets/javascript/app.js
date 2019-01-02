@@ -16,6 +16,7 @@ $(document).ready(function () {
     var user1;
     var user2;
     var playingAs = "notPlaying";
+    var phase;
 
     // get current user data from database
     database.ref().on('value', function (snap) {
@@ -28,6 +29,25 @@ $(document).ready(function () {
             connected: snap.val().user2.connected,
             name: snap.val().user2.name,
         };
+
+        // update player status on screen
+        if (user1.connected === true) {
+            $('#player-1-status').text('Connected');
+        } else {
+            $('#player-1-status').text('Seat Empty');
+        }
+        if (user2.connected === true) {
+            $('#player-2-status').text('Connected');
+        } else {
+            $('#player-2-status').text('Seat Empty');
+        }
+        console.log(user1);
+        console.log(user2);
+        $('#player-1-name').text(user1.name);
+        $('#player-2-name').text(user2.name);
+
+        // get current phase from database
+        phase = snap.val().phase;
     });
 
     // player joins game
@@ -36,8 +56,14 @@ $(document).ready(function () {
         // join the first available seat
         if (user1.connected === false && playingAs === 'notPlaying') {
             joinGame(user1.connected, user1.name, 'user1');
+            phase = "moveSelection";
+            database.ref("phase").set("moveSelection");
         } else if (user2.connected === false && playingAs === 'notPlaying') {
             joinGame(user2.connected, user2.name, 'user2');
+            phase = "moveSelection";
+            database.ref("phase").set("moveSelection");
+        } else if (playingAs === 'user1' || playingAs === 'user2') {
+            alert('Already playing.');
         } else {
             alert('Game is full.');
         }
@@ -46,7 +72,9 @@ $(document).ready(function () {
             // update local variables
             userConnected = true;
             userName = $('#form-enter-name').val().trim();
+            console.log(userSlot);
             playingAs = userSlot;
+            console.log(playingAs);
             // update database
             database.ref(userSlot).set({
                 connected: true,
@@ -57,27 +85,18 @@ $(document).ready(function () {
         }
     });
 
+    
+
     // player leaves game
-    database.ref(playingAs).onDisconnect().update({
-        connected: false,
-        name: null,
+    // database.ref(`/${playingAs}`).onDisconnect().update({
+    //     connected: false,
+    //     name: null,
+    // });
+
+    $(document).on('click', '#btn-console-log', function (e) {
+        e.preventDefault();
+        console.log(playingAs);
+        console.log(phase);
     });
 
 });
-
-/*
-var adaNameRef = firebase.database().ref('users/ada/name');
-adaNameRef.child('first').set('Ada');
-adaNameRef.child('last').set('Lovelace');
-
-var ref = firebase.database().ref("users/ada");
-ref.update({
-   onlineState: true,
-   status: "I'm online."
-});
-ref.onDisconnect().update({
-  onlineState: false,
-  status: "I'm offline."
-});
-
-*/

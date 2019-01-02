@@ -38,14 +38,14 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <div>
+                <div class="player-div" id="player-1-div">
                     <p>Player 1 Status: <span id="player-1-status"></span></p>
                     <p>Player 1 Choice: <span id="player-1-choice"></span></p>
                     <p>Player 1 Name: <span id="player-1-name"></span></p>
                 </div>
             </div>
             <div class="col">
-                <div>
+                <div class="player-div" id="player-2-div">
                     <p>Player 2 Status: <span id="player-2-status"></span></p>
                     <p>Player 2 Choice: <span id="player-1-choice"></span></p>
                     <p>Player 2 Name: <span id="player-2-name"></span></p>
@@ -57,34 +57,47 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <p>Choose your move: </p>
+                <div id="selections-div">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <p>Choose your move: </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-primary move-selection" id="select-rock">Rock</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary move-selection" id="select-paper">Paper</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary move-selection" id="select-scissors">Scissors</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 
     <div class="container">
         <div class="row">
-            <div class="col">
-                <p class="move-selection" id="select-rock">Rock</p>
-            </div>
-            <div class="col">
-                <p class="move-selection" id="select-paper">Paper</p>
-            </div>
-            <div class="col">
-                <p class="move-selection" id="select-scissors">Scissors</p>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="email">Enter Name:</label>
+                    <input type="" class="form-control" id="form-enter-name" placeholder="Jimbo" name="">
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-enter-name">Submit</button>
+                </form>
             </div>
         </div>
     </div>
 
-
-    <div class="container">
-        <div class="form-group">
-            <label for="email">Enter Name:</label>
-            <input type="" class="form-control" id="form-enter-name" placeholder="Jimbo" name="">
-        </div>
-        <button type="submit" class="btn btn-primary" id="btn-enter-name">Submit</button>
-        </form>
-    </div>
+    <button type="submit" class="btn btn-primary" id="btn-console-log">Submit</button>
 
 </body>
 
