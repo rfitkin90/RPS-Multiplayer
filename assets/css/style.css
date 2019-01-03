@@ -18,4 +18,15 @@ body, html {
 #selections-div {
   border: 2px solid grey;
   margin-top: 20px;
+  padding-bottom: 10px;
+}
+
+#round-result {
+  border: 2px solid grey;
+  margin-top: 20px;
+  visibility: hidden;
+}
+
+#name-submission-div {
+  margin-top: 20px;
 }

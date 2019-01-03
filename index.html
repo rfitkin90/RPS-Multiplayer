@@ -39,16 +39,31 @@
         <div class="row">
             <div class="col">
                 <div class="player-div" id="player-1-div">
-                    <p>Player 1 Status: <span id="player-1-status"></span></p>
-                    <p>Player 1 Choice: <span id="player-1-choice"></span></p>
-                    <p>Player 1 Name: <span id="player-1-name"></span></p>
+                    <h2>Player 1</h2>
+                    <p>Status: <span id="player-1-status"></span></p>
+                    <p>Name: <span id="player-1-name"></span></p>
+                    <p>Move: <span id="player-1-move"></span></p>
+                    <p>Score: <span id="player-1-score"></span></p>
                 </div>
             </div>
             <div class="col">
                 <div class="player-div" id="player-2-div">
-                    <p>Player 2 Status: <span id="player-2-status"></span></p>
-                    <p>Player 2 Choice: <span id="player-1-choice"></span></p>
-                    <p>Player 2 Name: <span id="player-2-name"></span></p>
+                    <h2>Player 2</h2>
+                    <p>Status: <span id="player-2-status"></span></p>
+                    <p>Name: <span id="player-2-name"></span></p>
+                    <p>Move: <span id="player-2-move"></span></p>
+                    <p>Score: <span id="player-2-score"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div id="round-result">
+                    <p id="round-winner"><span id="winner-result"></span></p>
+                    <p id="next-round-counter"></p>
                 </div>
             </div>
         </div>
@@ -68,13 +83,13 @@
                     <div class="container">
                         <div class="row">
                             <div class="col">
-                                <button class="btn btn-primary move-selection" id="select-rock">Rock</button>
+                                <button class="btn btn-primary move-selection" data-move="rock">Rock</button>
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary move-selection" id="select-paper">Paper</button>
+                                <button class="btn btn-primary move-selection" data-move="paper">Paper</button>
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary move-selection" id="select-scissors">Scissors</button>
+                                <button class="btn btn-primary move-selection" data-move="scissors">Scissors</button>
                             </div>
                         </div>
                     </div>
@@ -87,7 +102,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <div class="form-group">
+                <div class="form-group" id="name-submission-div">
                     <label for="email">Enter Name:</label>
                     <input type="" class="form-control" id="form-enter-name" placeholder="Jimbo" name="">
                 </div>
@@ -97,7 +112,7 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary" id="btn-console-log">Submit</button>
+    <!-- <button type="submit" class="btn btn-primary" id="btn-console-log">Submit</button> -->
 
 </body>
 
