@@ -67,11 +67,11 @@ $(document).ready(function () {
             if ((user1.move === 'rock' && user2.move === 'scissors') ||
                 (user1.move === 'scissors' && user2.move === 'paper') ||
                 (user1.move === 'paper' && user2.move === 'rock')) {
-                roundTransition('Player 1', user1.score, 'user1');
+                roundTransition('Player 1', user1['score'], 'user1');
             } else if ((user2.move === 'rock' && user1.move === 'scissors') ||
                 (user2.move === 'scissors' && user1.move === 'paper') ||
                 (user2.move === 'paper' && user1.move === 'rock')) {
-                roundTransition('Player 2', user2.score, 'user2');
+                roundTransition('Player 2', user2['score'], 'user2');
             } else if ((user1.move === 'rock' && user2.move === 'rock') ||
                 (user1.move === 'scissors' && user2.move === 'scissors') ||
                 (user1.move === 'paper' && user2.move === 'paper')) {
@@ -108,7 +108,10 @@ $(document).ready(function () {
             console.log(userScore);
             console.log(phase);
             console.log(playingAs);
+            console.log(userRef);
             if (playingAs === userRef) { userScore++ };
+            console.log(user1.score);
+            console.log(user2.score);
             database.ref(userRef).update({ score: userScore });
             $('#player-1-score').text(user1.score);
             $('#player-2-score').text(user2.score);
@@ -121,6 +124,7 @@ $(document).ready(function () {
                     setTimeout(() => {
                         $('#round-result').css('visibility', 'hidden');
                         phase = "moveSelection";
+                        database.ref("phase").set("moveSelection");
                         $('#player-1-move').text('');
                         $('#player-2-move').text('');
                     }, 1000);
