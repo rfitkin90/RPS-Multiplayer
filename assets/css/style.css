@@ -10,23 +10,30 @@ body, html {
   text-align: center;
 }
 
-.player-div {
+#player-1-div {
   border: 2px solid grey;
-  padding: 15px;
+  padding: 20px;
+  text-align: center;
 }
 
-#selections-div {
+#player-2-div {
   border: 2px solid grey;
-  margin-top: 20px;
-  padding-bottom: 10px;
+  padding: 20px;
+  text-align: center;
 }
 
-#round-result {
+#chat-div {
+  height: 77vh;
   border: 2px solid grey;
-  margin-top: 20px;
-  visibility: hidden;
 }
 
-#name-submission-div {
-  margin-top: 20px;
+#enter-name-form {
+  border: 2px solid grey;
+}
+
+@media only screen and (min-width: 768px) {
+  #enter-name-form {
+    position: fixed;
+    bottom: 20px;
+  }
 }
