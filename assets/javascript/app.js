@@ -172,6 +172,7 @@ $(document).ready(function () {
         // stuff that happens if you're one of the 2 players
         if (seatStatus.player1 === true && seatStatus.player2 === true && seatOccupied !== 'spectator') {
             $('#move-selection').css('visibility', 'visible');
+
         }
 
         // end game if a player leaves a seat
