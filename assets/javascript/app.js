@@ -12,199 +12,297 @@ $(document).ready(function () {
     firebase.initializeApp(config);
     var database = firebase.database();
 
+
+
     // declare user variables
-    var user1;
-    var user2;
-    var playingAs = 'notPlaying';
-    var phase;
+    var loggedIn = false;
+    var userName;
+    var seatOccupied = 'spectator';
+    var seatStatus;
+    var playerNames;
+    var moveSelected;
+    var moveName;
 
-    // reset database
-    // database.ref().set({ phase: 'waitingForPlayers' });
-    // database.ref('user1').set({ connected: false, name: null, score: 0 });
-    // database.ref('user2').set({ connected: false, name: null, score: 0 });
 
-    // get current user data from database
-    database.ref().on('value', function (snap) {
-        console.log(snap.val());
-        user1 = {
-            connected: snap.val().user1.connected,
-            name: snap.val().user1.name,
-            move: snap.val().user1.move,
-            score: snap.val().user1.score,
+
+    // generate random username
+    var RNG = Math.floor((Math.random() * 9999) + 1);
+    if (RNG < 10) {
+        userName = `Anonymous000${RNG.toString()}`;
+    } else if (RNG < 100) {
+        userName = `Anonymous00${RNG.toString()}`;
+    } else if (RNG < 1000) {
+        userName = `Anonymous0${RNG.toString()}`;
+    } else {
+        userName = `Anonymous${RNG.toString()}`;
+    }
+    console.log(userName);
+
+    // generate username color for chat
+    var redValue = Math.floor(Math.random() * 255);
+    var greenValue = Math.floor(Math.random() * 255);
+    var blueValue = Math.floor(Math.random() * 255);
+    var userNameColor = `rgb(${redValue}, ${greenValue}, ${blueValue})`;
+
+
+
+    // check database for player name info
+    database.ref('/playerNames/').on('value', function (snap) {
+        playerNames = {
+            player1: snap.val().player1,
+            player2: snap.val().player2,
         };
-        user2 = {
-            connected: snap.val().user2.connected,
-            name: snap.val().user2.name,
-            move: snap.val().user2.move,
-            score: snap.val().user2.score,
+        $('#player-1-name').text(playerNames.player1);
+        $('#player-2-name').text(playerNames.player2);
+    });
+
+    // save player scores from database to local variables
+    database.ref('/playerScores/').on('value', function (snap) {
+        playerScores = {
+            player1: snap.val().player1,
+            player2: snap.val().player2,
+        };
+        $('#player-1-score').text(`Score: ${playerScores.player1}`);
+        $('#player-2-score').text(`Score: ${playerScores.player2}`);
+    });
+
+    // save move name info from database to local variables
+    database.ref('/moveName/').on('value', function (snap) {
+        moveName = {
+            player1: snap.val().player1,
+            player2: snap.val().player2,
         };
 
-        // get current phase from database
-        phase = snap.val().phase;
-
-        // update player status/name on screen
-        if (user1.connected === true) {
-            $('#player-1-status').text('Connected');
-        } else {
-            $('#player-1-status').text('Seat Empty');
+        // determine round outcome
+        if (moveName.player1 !== 'none' && moveName.player2 !== 'none') {
+            // put images in player divs
+            $('#player-1-move').html(`<img src="./assets/images/${moveName.player1}.png">`);
+            $('#player-2-move').html(`<img src="./assets/images/${moveName.player2}.png">`);
+            // generate matchup text and determine winner
+            if (moveName.player1 === moveName.player2) {
+                $('#winner-text').text('Draw');
+            } else if ((moveName.player1 === 'rock' || moveName.player1 === 'paper') &&
+                (moveName.player2 === 'rock' || moveName.player2 === 'paper')) {
+                $('#matchup-text').text('Paper covers rock');
+                if (moveName.player1 === 'paper') {
+                    $('#winner-text').text('Player 1 wins');
+                    database.ref('/playerScores/').update({ player1: playerScores.player1 + 1 });
+                } else if (moveName.player2 === 'paper') {
+                    $('#winner-text').text('Player 2 wins');
+                    database.ref('/playerScores/').update({ player2: playerScores.player2 + 1 });
+                }
+            } else if ((moveName.player1 === 'paper' || moveName.player1 === 'scissors') &&
+                (moveName.player2 === 'paper' || moveName.player2 === 'scissors')) {
+                $('#matchup-text').text('Scissors cut paper');
+                if (moveName.player1 === 'scissors') {
+                    $('#winner-text').text('Player 1 wins');
+                    database.ref('/playerScores/').update({ player1: playerScores.player1 + 1 });
+                } else if (moveName.player2 === 'scissors') {
+                    $('#winner-text').text('Player 2 wins');
+                    database.ref('/playerScores/').update({ player2: playerScores.player2 + 1 });
+                }
+            } else if ((moveName.player1 === 'scissors' || moveName.player1 === 'rock') &&
+                (moveName.player2 === 'scissors' || moveName.player2 === 'rock')) {
+                $('#matchup-text').text('Rock crushes scissors');
+                if (moveName.player1 === 'rock') {
+                    $('#winner-text').text('Player 1 wins');
+                    database.ref('/playerScores/').update({ player1: playerScores.player1 + 1 });
+                } else if (moveName.player2 === 'rock') {
+                    $('#winner-text').text('Player 2 wins');
+                    database.ref('/playerScores/').update({ player2: playerScores.player2 + 1 });
+                }
+            }
+            // next round setup
+            $('#next-round-text').text('Next round in 3...');
+            setTimeout(function () { $('#next-round-text').text('Next round in 2...') }, 1000);
+            setTimeout(function () { $('#next-round-text').text('Next round in 1...') }, 2000);
+            setTimeout(function () {
+                database.ref('/moveName/').update({ player1: 'none', player2: 'none' });
+                $('#next-round-text').text('');
+                $('#player-1-move').empty();
+                $('#player-2-move').empty();
+                $('#matchup-text').text('');
+                $('#winner-text').text('');
+            }, 3000);
         }
-        if (user2.connected === true) {
-            $('#player-2-status').text('Connected');
+    });
+
+    // save move selected info from database to local variables
+    database.ref('/moveSelected/').on('value', function (snap) {
+        moveSelected = {
+            player1: snap.val().player1,
+            player2: snap.val().player2,
+        };
+    });
+
+    // check database for seat availability
+    database.ref('/seatStatus/').on('value', function (snap) {
+        // set database values to local variables
+        seatStatus = {
+            player1: snap.val().player1,
+            player2: snap.val().player2,
+        };
+        // seat 1
+        if (seatOccupied === 'player1') {
+            $('#player-1-btn-div').html(`<button class="btn btn-primary" id="leave-1-btn">Leave Game</button>`);
+        } else if (seatStatus.player1 === false && seatOccupied === 'spectator') {
+            $('#player-1-btn-div').html(`<button class="btn btn-primary" id="join-1-btn">Join Game</button>`);
         } else {
-            $('#player-2-status').text('Seat Empty');
+            $('#player-1-btn-div').empty();
         }
-        console.log(user1);
-        console.log(user2);
-        $('#player-1-name').text(user1.name);
-        $('#player-2-name').text(user2.name);
+        // seat 2
+        if (seatOccupied === 'player2') {
+            $('#player-2-btn-div').html(`<button class="btn btn-primary" id="leave-2-btn">Leave Game</button>`);
+        } else if (seatStatus.player2 === false && seatOccupied === 'spectator') {
+            $('#player-2-btn-div').html(`<button class="btn btn-primary" id="join-2-btn">Join Game</button>`);
+        } else {
+            $('#player-2-btn-div').empty();
+        }
 
-        // get current scores from database
-        $('#player-1-score').text(user1.score);
-        $('#player-2-score').text(user2.score);
+        // start game if both seats are occupied
+        // stuff that happens for everyone
+        if (seatStatus.player1 === true && seatStatus.player2 === true) {
+            $('#player-1-score').css('visibility', 'visible');
+            $('#player-2-score').css('visibility', 'visible');
+            database.ref('/playerScores/').set({ player1: 0, player2: 0 });
+            database.ref('/moveSelected/').set({ player1: false, player2: false });
+            database.ref('/moveName/').set({ player1: 'none', player2: 'none' });
+        }
 
-        // compare moves
-        if (phase === "moveSelection") {
-            if ((user1.move === 'rock' && user2.move === 'scissors') ||
-                (user1.move === 'scissors' && user2.move === 'paper') ||
-                (user1.move === 'paper' && user2.move === 'rock')) {
-                roundTransition('Player 1', user1['score'], 'user1');
-            } else if ((user2.move === 'rock' && user1.move === 'scissors') ||
-                (user2.move === 'scissors' && user1.move === 'paper') ||
-                (user2.move === 'paper' && user1.move === 'rock')) {
-                roundTransition('Player 2', user2['score'], 'user2');
-            } else if ((user1.move === 'rock' && user2.move === 'rock') ||
-                (user1.move === 'scissors' && user2.move === 'scissors') ||
-                (user1.move === 'paper' && user2.move === 'paper')) {
-                phase = "roundTransition";
-                database.ref("phase").set("roundTransition");
-                console.log(phase);
-                $('#player-1-move').text(user1.move);
-                $('#player-2-move').text(user2.move);
-                $('#winner-result').text('Draw');
-                $('#round-result').css('visibility', 'visible');
-                $('#next-round-counter').text('Next round in 3...');
-                setTimeout(() => {
-                    $('#next-round-counter').text('Next round in 2...');
-                    setTimeout(() => {
-                        $('#next-round-counter').text('Next round in 1...');
-                        setTimeout(() => {
-                            $('#round-result').css('visibility', 'hidden');
-                            phase = "moveSelection";
-                            database.ref("phase").set("moveSelection");
-                            $('#player-1-move').text('');
-                            $('#player-2-move').text('');
-                        }, 1000);
-                    }, 1000);
-                }, 1000);
+        // stuff that happens if you're one of the 2 players
+        if (seatStatus.player1 === true && seatStatus.player2 === true && seatOccupied !== 'spectator') {
+            $('#move-selection').css('visibility', 'visible');
+
+        }
+
+        // end game if a player leaves a seat
+        if (seatStatus.player1 === false || seatStatus.player2 === false) {
+            $('#player-1-score').css('visibility', 'hidden');
+            $('#player-2-score').css('visibility', 'hidden');
+            $('#player-1-move').empty();
+            $('#player-1-move').empty();
+            $('#move-selection').css('visibility', 'hidden');
+            // reset game
+            database.ref('/moveSelected/').set({ player1: false, player2: false });
+            database.ref('/moveName/').update({ player1: 'none', player2: 'none' });
+            database.ref('/playerScores/').set({ player1: 0, player2: 0 });
+            $('#next-round-text').text('');
+            $('#matchup-text').text('');
+            $('#winner-text').text('');
+        }
+
+    });
+
+
+
+    // user selects move
+    $(document).on('click', '.move-btn', function () {
+        if (seatOccupied === 'player1' && moveName.player1 === 'none') {
+            database.ref('/moveSelected/').update({ player1: true });
+            database.ref('/moveName/').update({ player1: $(this).attr('data-move') });
+            if (moveName.player2 === 'none') {
+                $('#matchup-text').text(`Waiting for player 2's selection`);
+            }
+        } else if (seatOccupied === 'player2' && moveName.player2 === 'none') {
+            database.ref('/moveSelected/').update({ player2: true });
+            database.ref('/moveName/').update({ player2: $(this).attr('data-move') });
+            if (moveName.player1 === 'none') {
+                $('#matchup-text').text(`Waiting for player 1's selection`);
             }
         }
-
-        function roundTransition(playerNumber, userScore, userRef) {
-            phase = "roundTransition";
-            database.ref("phase").set("roundTransition");
-            $('#player-1-move').text(user1.move);
-            $('#player-2-move').text(user2.move);
-            $('#winner-result').text(playerNumber);
-            console.log(userScore);
-            console.log(phase);
-            console.log(playingAs);
-            console.log(userRef);
-            if (playingAs === userRef) { userScore++ };
-            console.log(user1.score);
-            console.log(user2.score);
-            database.ref(userRef).update({ score: userScore });
-            $('#player-1-score').text(user1.score);
-            $('#player-2-score').text(user2.score);
-            $('#round-result').css('visibility', 'visible');
-            $('#next-round-counter').text('Next round in 3...');
-            setTimeout(() => {
-                $('#next-round-counter').text('Next round in 2...');
-                setTimeout(() => {
-                    $('#next-round-counter').text('Next round in 1...');
-                    setTimeout(() => {
-                        $('#round-result').css('visibility', 'hidden');
-                        phase = "moveSelection";
-                        database.ref("phase").set("moveSelection");
-                        $('#player-1-move').text('');
-                        $('#player-2-move').text('');
-                    }, 1000);
-                }, 1000);
-            }, 1000);
-        }
     });
 
-    // player joins game
-    $(document).on('click', '#btn-enter-name', function (e) {
+
+
+    // enter username
+    $(document).on('click', '#enter-name-btn', function (e) {
         e.preventDefault();
-        // join the first available seat
-        if (user1.connected === false && playingAs === 'notPlaying') {
-            joinGame(user1.connected, user1.name, 'user1');
-        } else if (user2.connected === false && playingAs === 'notPlaying') {
-            joinGame(user2.connected, user2.name, 'user2');
-        } else if (playingAs === 'user1' || playingAs === 'user2') {
-            alert('Already playing.');
-        } else {
-            alert('Game is full.');
-        }
-
-        if (user1.connected === true && user2.connected === true) {
-            phase = "moveSelection";
-            database.ref("phase").set("moveSelection");
-        }
-
-        console.log(phase);
-
-        function joinGame(userConnected, userName, userSlot) {
-            // update local variables
-            userConnected = true;
-            userName = $('#form-enter-name').val().trim();
-            console.log(userSlot);
-            playingAs = userSlot;
-            console.log(playingAs);
-            // update database
-            database.ref(userSlot).update({
-                connected: true,
-                name: userName,
-            });
-            // clear form
-            $('#form-enter-name').val('');
+        userName = $('#enter-name-input').val().trim();
+        loggedIn = true;
+        $('#enter-name-input').val('');
+        $('#enter-name-form').hide();
+        console.log(userName);
+        if (seatOccupied === 'player1') {
+            database.ref('playerNames/player1').set(userName);
+        } else if (seatOccupied === 'player2') {
+            database.ref('playerNames/player2').set(userName);
         }
     });
 
-    // move selection
-    $(document).on('click', '.move-selection', function (e) {
+
+
+    // join game in seat 1
+    $(document).on('click', '#join-1-btn', function (e) {
         e.preventDefault();
-        console.log('sup');
-        console.log(playingAs);
-        console.log(user1.move);
-        console.log(user2.move);
-        if (phase === "moveSelection") {
-            if (playingAs === 'user1' && user1.move === undefined) {
-                user1.move = $(this).attr('data-move');
-                console.log(user1.move);
-                database.ref('user1').update({ move: user1.move });
-                $('#player-1-move').text('Chosen');
-            } else if (playingAs === 'user2' && user2.move === undefined) {
-                user2.move = $(this).attr('data-move');
-                console.log(user2.move);
-                database.ref('user2').update({ move: user2.move });
-                $('#player-2-move').text('Chosen');
-            }
-        }
+        $('#player-1-name').text(userName);
+        $('#player-2-btn-div').empty();
+        seatOccupied = 'player1';
+        $('#player-1-btn-div').html(`<button class="btn btn-primary" id="leave-1-btn">Leave Game</button>`);
+        database.ref('seatStatus/player1').set(true);
+        database.ref('playerNames/player1').set(userName);
+    });
+    // join game in seat 2
+    $(document).on('click', '#join-2-btn', function (e) {
+        e.preventDefault();
+        $('#player-2-name').text(userName);
+        $('#player-1-btn-div').empty();
+        seatOccupied = 'player2';
+        $('#player-2-btn-div').html(`<button class="btn btn-primary" id="leave-2-btn">Leave Game</button>`);
+        database.ref('seatStatus/player2').set(true);
+        database.ref('playerNames/player2').set(userName);
     });
 
 
 
-    // player leaves game
-    // database.ref(`/${playingAs}`).onDisconnect().update({
-    //     connected: false,
-    //     name: null,
-    // });
+    // leave seat 1
+    $(document).on('click', '#leave-1-btn', function (e) {
+        e.preventDefault();
+        database.ref('playerNames/player1').set('Seat Empty');
+        database.ref('seatStatus/player1').set(false);
+        seatOccupied = 'spectator';
+        $('#player-1-btn-div').html(`<button class="btn btn-primary" id="join-1-btn">Join Game</button>`);
+        if (seatStatus.player2 === false) {
+            $('#player-2-btn-div').html(`<button class="btn btn-primary" id="join-2-btn">Join Game</button>`);
+        }
+    });
+    // leave seat 2
+    $(document).on('click', '#leave-2-btn', function (e) {
+        e.preventDefault();
+        database.ref('playerNames/player2').set('Seat Empty');
+        database.ref('seatStatus/player2').set(false);
+        seatOccupied = 'spectator';
+        $('#player-2-btn-div').html(`<button class="btn btn-primary" id="join-2-btn">Join Game</button>`);
+        if (seatStatus.player1 === false) {
+            $('#player-1-btn-div').html(`<button class="btn btn-primary" id="join-1-btn">Join Game</button>`);
+        }
+    });
 
-    // $(document).on('click', '#btn-console-log', function (e) {
-    //     e.preventDefault();
-    //     console.log(playingAs);
-    //     console.log(phase);
-    // });
+
+    // send chat message
+    $(document).on('click', '#send-message-btn', function (e) {
+        e.preventDefault();
+        database.ref('/lastChatMessage/').set(`<p><span style="font-weight:bold; color:${userNameColor}">${userName}</span>
+            <span>: ${$('#send-message-input').val().trim()}</span></p>`);
+        $('#send-message-input').val('');
+    });
+
+    // append message to chat window
+    database.ref('/lastChatMessage/').on('value', function (snap) {
+        $('#chat-messages').append(snap.val());
+    });
 
 });
+
+
+/* QUESTIONS 
+
+1. How to make onDisconnect() method work so players are kicked from their seat if disconnect w/o leaving it?
+
+2. How to make chat-messages div take up remaining y-axis space between jumbotron and compose-message div(while 
+    still letting jumbotraon and compose-message div be fixed heights)?
+
+3. How to make chat-messages div automatically scroll to bottom each time a message is sent?
+
+4. How to make the the last chat message database reference not run on page load?
+
+*/
