@@ -33,70 +33,87 @@
         <div class="container">
             <h1>Rock Paper Scissors</h1>
         </div>
+        <!-- enter name form -->
+        <form id="enter-name-form">
+            <div class="form-group">
+                <label for="enter-name">Enter Name</label>
+                <input class="form-control" id="enter-name-input">
+            </div>
+            <button type="submit" class="btn btn-primary" id="enter-name-btn">Submit</button>
+        </form>
     </div>
 
     <div class="container">
         <div class="row">
 
+            <!-- player 1 div -->
             <div class="col-md-4">
-
-                <!-- player 1 div -->
                 <div id="player-1-div">
                     <h2>Player 1</h2>
                     <h4 id="player-1-name"></h4>
+                    <p id="player-1-score"></p>
+                    <div id="player-1-move"></div>
                     <div id="player-1-btn-div"></div>
                 </div>
-
-
-
             </div>
 
+            <!-- player 2 div -->
             <div class="col-md-4">
-
-                <!-- player 2 div -->
                 <div id="player-2-div">
                     <h2>Player 2</h2>
                     <h4 id="player-2-name"></h4>
+                    <p id="player-2-score"></p>
+                    <div id="player-2-move"></div>
                     <div id="player-2-btn-div"></div>
                 </div>
-
-                <!-- enter name form -->
-                <form id="enter-name-form">
-                    <div class="form-group">
-                        <label for="enter-name">Enter Name</label>
-                        <input class="form-control" id="enter-name-input">
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="enter-name-btn">Submit</button>
-                </form>
             </div>
 
-            <!-- chat -->
-            <div class="col-md-4" id="chat-col">
-                <div id="chat-div">
-                    <div id="chat-messages">
 
-                    </div>
-                    <div id="compose-message">
-
-                    </div>
-                </div>
-
-
-            </div>
 
         </div>
     </div>
-
-
-
 
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
-
+            <div class="col-md-8">
+                <div id="move-and-round-info-div">
+                    <p id="matchup-text"></p>
+                    <p id="winner-text"></p>
+                    <p id="next-round-text"></p>
+                    <div id="move-selection">
+                        <h4>Select Move</h4>
+                        <div id="move-btn-div">
+                            <button class="btn btn-primary move-btn" id="rock-btn" data-move="rock">Rock</button>
+                            <button class="btn btn-primary move-btn" id="paper-btn" data-move="paper">Paper</button>
+                            <button class="btn btn-primary move-btn" id="scissors-btn" data-move="scissors">Scissors</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- chat -->
+            <div class="col-md-4" id="chat-col">
+                <div id="chat-div">
+                    <div id="chat-messages-parent-div">
+                        <div id="chat-messages">
+                        </div>
+                        <div id="compose-message">
+                            <form id="send-message-form">
+                                <div class="form-group">
+                                    <input class="form-control" id="send-message-input">
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="send-message-btn">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+
+
+
+
 
 </body>
 
