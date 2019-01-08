@@ -302,6 +302,7 @@ $(document).ready(function () {
     still letting jumbotraon and compose-message div be fixed heights)?
 
 3. How to make chat-messages div automatically scroll to bottom each time a message is sent?
+    .scroll() jquery
 
 4. How to make the the last chat message database reference not run on page load?
 
