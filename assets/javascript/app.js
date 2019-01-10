@@ -277,12 +277,15 @@ $(document).ready(function () {
         }
     });
 
+    database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('SeatEmpty');
+    database.ref(`/seatStatus/${seatOccupied}`).onDisconnect().set(false);
+
 
     // send chat message
     $(document).on('click', '#send-message-btn', function (e) {
         e.preventDefault();
-        database.ref('/lastChatMessage/').set(`<p><span style="font-weight:bold; color:${userNameColor}">${userName}</span>
-            <span>: ${$('#send-message-input').val().trim()}</span></p>`);
+        database.ref('/lastChatMessage/').set(`<p><span style="font-weight:bold; color:${userNameColor}">
+            ${userName}</span><span>: ${$('#send-message-input').val().trim()}</span></p>`);
         $('#send-message-input').val('');
     });
 
