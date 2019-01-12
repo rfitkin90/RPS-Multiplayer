@@ -237,6 +237,9 @@ $(document).ready(function () {
         $('#player-1-name').text(userName);
         $('#player-2-btn-div').empty();
         seatOccupied = 'player1';
+        console.log(seatOccupied);
+        database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('Seat Empty');
+        database.ref(`/seatStatus/${seatOccupied}`).onDisconnect().set(false);
         $('#player-1-btn-div').html(`<button class="btn btn-primary" id="leave-1-btn">Leave Game</button>`);
         database.ref('seatStatus/player1').set(true);
         database.ref('playerNames/player1').set(userName);
@@ -247,6 +250,9 @@ $(document).ready(function () {
         $('#player-2-name').text(userName);
         $('#player-1-btn-div').empty();
         seatOccupied = 'player2';
+        console.log(seatOccupied);
+        database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('Seat Empty');
+        database.ref(`/seatStatus/${seatOccupied}`).onDisconnect().set(false);
         $('#player-2-btn-div').html(`<button class="btn btn-primary" id="leave-2-btn">Leave Game</button>`);
         database.ref('seatStatus/player2').set(true);
         database.ref('playerNames/player2').set(userName);
@@ -278,12 +284,13 @@ $(document).ready(function () {
     });
 
     // if player disconnects
-    database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('Seat Empty');
-    database.ref(`/seatStatus/${seatOccupied}`).onDisconnect().set(false);
-    
+    // database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('Seat Empty');
+    // database.ref(`/seatStatus/${seatOccupied}`).onDisconnect().set(false);
+
     $(document).on('click', '#log-seat', function (e) {
         e.preventDefault();
         console.log(seatOccupied);
+        console.log(window.innerHeight - 100);
     });
 
 
@@ -303,11 +310,11 @@ $(document).ready(function () {
 });
 
 
-/* QUESTIONS 
+/* QUESTIONS
 
 1. How to make onDisconnect() method work so players are kicked from their seat if disconnect w/o leaving it?
 
-2. How to make chat-messages div take up remaining y-axis space between jumbotron and compose-message div(while 
+2. How to make chat-messages div take up remaining y-axis space between jumbotron and compose-message div(while
     still letting jumbotraon and compose-message div be fixed heights)?
 
 3. How to make chat-messages div automatically scroll to bottom each time a message is sent?
