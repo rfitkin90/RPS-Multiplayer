@@ -5,8 +5,8 @@ body, html {
   color: #ffffff;
 }
 
-.jumbotron {
-  background-color: rgb(0, 68, 124);
+#title {
+  text-align: center;
 }
 
 #player-1-div {
@@ -21,16 +21,14 @@ body, html {
   text-align: center;
 }
 
-#chat-div {
-  height: 77vh;
+#sidebar {
+  height: 100vh;
   border: 2px solid grey;
 }
 
 #enter-name-form {
   border: 2px solid grey;
   padding: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
 }
 
 #move-btn-div {
@@ -85,6 +83,7 @@ body, html {
 
 #move-and-round-info-div {
   margin-top: 20px;
+  margin-bottom: 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -98,8 +97,7 @@ body, html {
 
 #chat-messages {
   width: 100%;
-  height: 88%;
-  overflow-y: hidden;
+  overflow-y: scroll;
   padding: 10px;
 }
 
@@ -125,32 +123,27 @@ body, html {
 @media only screen and (min-width: 768px) {
   #enter-name-form {
     border: 2px solid grey;
-    position: fixed;
-    top: 20px;
-    right: 23px;
     padding: 10px;
     width: 303px;
     height: 150px;
     margin-right: 0;
   }
 
-  #chat-div {
+  #sidebar {
     position: fixed;
+    top: 0;
     right: 0;
     width: 36%;
-    top: 184px;
-    height: 81.7vh;
     border: 2px solid grey;
   }
 }
 
 @media only screen and (min-width: 911px) {
-  #chat-div {
+  #sidebar {
     position: fixed;
+    top: 0;
     right: 0;
     width: 350px;
-    top: 184px;
-    height: 81.7vh;
     border: 2px solid grey;
   }
 }

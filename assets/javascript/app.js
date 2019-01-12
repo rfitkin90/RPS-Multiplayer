@@ -277,8 +277,14 @@ $(document).ready(function () {
         }
     });
 
-    database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('SeatEmpty');
+    // if player disconnects
+    database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('Seat Empty');
     database.ref(`/seatStatus/${seatOccupied}`).onDisconnect().set(false);
+    
+    $(document).on('click', '#log-seat', function (e) {
+        e.preventDefault();
+        console.log(seatOccupied);
+    });
 
 
     // send chat message
