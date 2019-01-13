@@ -1,9 +1,13 @@
 body, html {
   height: 100%;
-  background-color: #191a1e;
   font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
   color: #ffffff;
+  background-image: url("../images/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-shadow: 2px 2px #000000, -1px -1px #000000, 1px -1px #000000, -1px 1px #000000;
 }
+
 
 #title {
   text-align: center;
@@ -13,23 +17,41 @@ body, html {
   border: 2px solid grey;
   padding: 20px;
   text-align: center;
+  background-color: #191a1e;
 }
 
 #player-2-div {
   border: 2px solid grey;
   padding: 20px;
   text-align: center;
+  background-color: #191a1e;
 }
 
 #sidebar {
   height: 100vh;
   border: 2px solid grey;
+  background-color: #191a1e;
 }
 
-#enter-name-form {
+/* #enter-name-form {
   border: 2px solid grey;
   padding: 10px;
+} */
+
+/* #enter-name-btn {
+  float: right;
 }
+
+#submit-name-float {
+
+}
+
+
+
+#name-label {
+  margin-bottom: 0;
+  padding-top: 6px;
+} */
 
 #move-btn-div {
   display: flex;
@@ -114,6 +136,28 @@ body, html {
   padding: 5px;
 }
 
+/* #enter-name-form {
+  border: 2px solid grey;
+  height: 102px;
+  width: 276px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+} */
+
+#enter-name-form {
+  position: absolute;
+  top: 5px;
+  width: 98%;
+}
+
+#enter-name-btn {
+  position: absolute;
+  right: -1px;
+  bottom: 2px;
+}
+
 #send-message-btn {
   position: absolute;
   right: 5px;
@@ -122,11 +166,7 @@ body, html {
 
 @media only screen and (min-width: 768px) {
   #enter-name-form {
-    border: 2px solid grey;
-    padding: 10px;
-    width: 303px;
-    height: 150px;
-    margin-right: 0;
+    width: 97%;
   }
 
   #sidebar {

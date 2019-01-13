@@ -87,27 +87,34 @@
             <div id="chat-messages-parent-div">
                 <div id="chat-messages">
                 </div>
+                <!-- compose message/enter name -->
                 <div id="compose-message">
+                    <!-- compose message -->
                     <form id="send-message-form">
                         <div class="form-group">
                             <input class="form-control" id="send-message-input">
                         </div>
                         <button type="submit" class="btn btn-primary" id="send-message-btn">Chat</button>
                     </form>
+                    <!-- enter name -->
+                    <form id="enter-name-form">
+                        <div class="form-group">
+                            <input class="form-control" id="enter-name-input">
+                        </div>
+                        <div id="submit-name-float">
+                            <label for="enter-name" id="name-label">Enter Name to Chat</label>
+                            <button type="submit" class="btn btn-primary" id="enter-name-btn">Submit</button>
+                        </div>
+                    </form>
                 </div>
+                
             </div>
         </div>
 
-        <form id="enter-name-form">
-            <div class="form-group">
-                <label for="enter-name">Enter Name</label>
-                <input class="form-control" id="enter-name-input">
-            </div>
-            <button type="submit" class="btn btn-primary" id="enter-name-btn">Submit</button>
-        </form>
         
+
         <!-- test seatOccupied variable -->
-        <button class="btn" id="log-seat" style="margin-top: 20px">Log Seat</button>
+        <!-- <button class="btn" id="log-seat" style="margin-top: 20px">Log Seat</button> -->
 
     </div>
 

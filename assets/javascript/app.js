@@ -227,6 +227,7 @@ $(document).ready(function () {
         } else if (seatOccupied === 'player2') {
             database.ref('playerNames/player2').set(userName);
         }
+        $('#send-message-input').focus();
     });
 
 
@@ -287,11 +288,11 @@ $(document).ready(function () {
     // database.ref(`/playerNames/${seatOccupied}`).onDisconnect().set('Seat Empty');
     // database.ref(`/seatStatus/${seatOccupied}`).onDisconnect().set(false);
 
-    $(document).on('click', '#log-seat', function (e) {
-        e.preventDefault();
-        console.log(seatOccupied);
-        console.log(window.innerHeight - 100);
-    });
+    // $(document).on('click', '#log-seat', function (e) {
+    //     e.preventDefault();
+    //     console.log(seatOccupied);
+    //     console.log(window.innerHeight - 100);
+    // });
 
 
     // send chat message
@@ -305,7 +306,13 @@ $(document).ready(function () {
     // append message to chat window
     database.ref('/lastChatMessage/').on('value', function (snap) {
         $('#chat-messages').append(snap.val());
+        // $('#chat-messages').scrollTop = $('#chat-messages').scrollHeight;
+        $('#chat-messages').animate({
+            scrollTop: $('#chat-messages').get(0).scrollHeight
+        }, 0);
     });
+
+    $('#chat-messages').css('height', `${window.innerHeight - 105}px`);
 
 });
 
