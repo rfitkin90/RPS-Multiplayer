@@ -1,5 +1,7 @@
 ### RPS-Multiplayer
 
+An online multiplayer Rock-Paper-Scissors game.
+
 ## User Instructions
 
 1. Send a friend the link (https://rfitkin90.github.io/RPS-Multiplayer/) so you can play rock paper scissors with them!
